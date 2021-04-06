@@ -15,40 +15,54 @@ using namespace ariel;
 
 #include <string>
 using namespace std;
+Board board;
 
-
-TEST_CASE("good post") {
-    Board board;
+TEST_CASE("test post") {
     CHECK_NOTHROW(board.post(100,200,Direction::Horizontal,"abcd"));
-    CHECK_NOTHROW(board.post(50,200,Direction::Horizontal,"efg"));
+    CHECK_NOTHROW(board.post(50,200,Direction::Vertical,"efg"));
     CHECK_NOTHROW(board.post(100,2065,Direction::Horizontal,"hijkl"));
-    CHECK_NOTHROW(board.post(101,200,Direction::Horizontal,"mnopqrst"));
-    CHECK_NOTHROW(board.post(14,200,Direction::Horizontal,"uvwxyz"));
+    CHECK_NOTHROW(board.post(101,200,Direction::Horizontal,"mnop"));
+    CHECK_NOTHROW(board.post(99,202,Direction::Vertical,"qrst"));
+    CHECK_NOTHROW(board.post(14,200,Direction::Horizontal,"uvw"));
+    CHECK_NOTHROW(board.post(17,207,Direction::Vertical,"xyz"));
 }
-TEST_CASE("bad post") {
-    Board board;
-    CHECK_THROWS(board.post(-100,200,Direction::Horizontal,"abcd"));
-    CHECK_THROWS(board.post(50,-200,Direction::Horizontal,"efg"));
-    CHECK_THROWS(board.post(-100,-2065,Direction::Horizontal,"hijkl"));
-    CHECK_THROWS(board.post(-101,200,Direction::Horizontal,"mnopqrst"));
-    CHECK_THROWS(board.post(14,-200,Direction::Horizontal,"uvwxyz"));
-}
-TEST_CASE("good read") {
-    Board board;
-    CHECK_NOTHROW(board.read(100,200,Direction::Horizontal,4));
-    CHECK_NOTHROW(board.read(50,200,Direction::Horizontal,3));
-    board.post(100,200, Direction::Horizontal, "abcd");
-    CHECK(board.read(99,201, Direction::Vertical,3) == string("_b_"));
+TEST_CASE("test read") {
+    CHECK(board.read(99,201, Direction::Vertical,3) == string("_bn"));
     CHECK(board.read(99,201, Direction::Vertical,0) == string(""));
-    board.post(99,202, Direction::Vertical, "xyz");
-    CHECK(board.read(100,200, Direction::Horizontal,6) == string("abyd__"));
+    CHECK(board.read(100,200, Direction::Horizontal,6) == string("abrd__"));
+    CHECK(board.read(101,199, Direction::Horizontal,6) == string("_mnsp_"));
+    CHECK(board.read(13,200, Direction::Vertical,3) == string("_u_"));
+    CHECK(board.read(49,200, Direction::Vertical,3) == string("_ef"));
+    CHECK(board.read(100,2064, Direction::Horizontal,6) == string("_hijkl"));
 }
-TEST_CASE("bad read") {
-    Board board;
-    CHECK_THROWS(board.read(-100,200,Direction::Horizontal,4));
-    CHECK_THROWS(board.read(50,-200,Direction::Horizontal,3));
-    CHECK_THROWS(board.read(100,2065,Direction::Horizontal,-2));
-    CHECK_THROWS(board.read(101,200,Direction::Horizontal,-5));
-    CHECK_THROWS(board.read(14,200,Direction::Horizontal,-7));
+TEST_CASE("random read") {
+    ariel::Board bo;
+    unsigned int random_row = rand() % 100;
+    unsigned int random_col = rand() % 100;
+    unsigned int random_len = rand() % 100;
+    std::string str="messageboard";
+    std::string ans="";
+    CHECK_NOTHROW(bo.post(random_row, random_col, Direction::Horizontal, str));
+    if(random_len<=str.size()){
+        ans=str.substr(0,random_len);
+    }
+    else{
+        ans=str;
+        for(int i=0;i<random_len-str.size();i++){
+         ans+='_';   
+        }
+    }
+    CHECK(board.read(random_row, random_col, Direction::Horizontal, random_len) == string(ans));
+    CHECK_NOTHROW(bo.post(random_row, random_col, Direction::Horizontal, str));
+    CHECK(board.read(random_row, random_col, Direction::Horizontal, random_len) == string(ans));
 }
-
+TEST_CASE("random post") {
+    ariel::Board bo;
+    unsigned int random_row = 0;
+    unsigned int random_col = 0;
+    for(int i=0;i<3;i++){
+        random_row = rand() % 100;
+        random_col = rand() % 100;
+        CHECK_NOTHROW(bo.post(random_row, random_col, Direction::Horizontal, "messageboard"));
+    }
+}
