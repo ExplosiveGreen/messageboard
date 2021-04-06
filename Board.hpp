@@ -3,20 +3,19 @@
 #include <unordered_map>
 #include <iostream>
 using namespace std;
-#define SIZE 7
 namespace ariel {
 	class Board {
 		unordered_map<string, char> chars;
-		pair<int,int>startPoint;
-		pair<int,int>endPoint;
+		pair<u_int,u_int>startPoint;
+		pair<u_int,u_int>endPoint;
 		public:
 			Board() {
 				startPoint=make_pair(-1,-1);
 				endPoint=make_pair(-1,-1);
 			}
 			~Board() {}
-			void post(int row, int column, Direction direction, std::string message);
-			std::string read(int row, int column, Direction direction, int length);
+			void post(u_int row, u_int column, Direction direction, std::string message);
+			std::string read(u_int row, u_int column, Direction direction, u_int length);
 			void show();
 	};
 }
