@@ -52,9 +52,9 @@ TEST_CASE("random read") {
          ans+='_';   
         }
     }
-    CHECK(board.read(random_row, random_col, Direction::Horizontal, random_len) == string(ans));
+    CHECK(bo.read(random_row, random_col, Direction::Horizontal, random_len) == string(ans));
     CHECK_NOTHROW(bo.post(random_row, random_col, Direction::Horizontal, str));
-    CHECK(board.read(random_row, random_col, Direction::Horizontal, random_len) == string(ans));
+    CHECK(bo.read(random_row, random_col, Direction::Horizontal, random_len) == string(ans));
 }
 TEST_CASE("random post") {
     ariel::Board bo;
